@@ -1,0 +1,32 @@
+<template>
+    <lightning-card variant="Narrow" title="ViaCEP" icon-name="action:map">
+        <template if:false={loaded}>
+            <lightning-spinner alternative-text="Loading"></lightning-spinner>
+        </template>
+        <lightning-layout multiple-rows>
+            <lightning-layout-item size="4" padding="horizontal-small">
+                <lightning-input label="CEP" name="cep" value={address.cep} type="text" id="cep" max-length="9"
+                    onchange={handleFieldChange} onblur={handleBlurCEP}></lightning-input>
+            </lightning-layout-item>
+            <lightning-layout-item size="8" padding="horizontal-small">
+                <lightning-input label="Endereço" name="rua" value={address.logradouro} onchange={handleFieldChange} type="text" id="rua">
+                </lightning-input>
+            </lightning-layout-item>
+            <lightning-layout-item size="12" padding="horizontal-small">
+                <lightning-input label="Bairro" name="bairro" value={address.bairro} onchange={handleFieldChange} type="text"
+                    id="bairro"></lightning-input>
+            </lightning-layout-item>
+            <lightning-layout-item size="12" padding="horizontal-small">
+                <lightning-input label="Cidade" name="cidade" onchange={handleFieldChange} value={address.localidade} type="text"
+                    id="cidade"></lightning-input>
+            </lightning-layout-item>
+            <lightning-layout-item size="4" padding="horizontal-small">
+                <lightning-input label="Estado" name="uf" onchange={handleFieldChange} max-length="2" value={address.uf}
+                    type="text" id="uf"></lightning-input>
+            </lightning-layout-item>
+        </lightning-layout>
+        <div slot="footer">
+            <lightning-button label="Salvar" onclick={handleSave}></lightning-button>
+        </div>
+    </lightning-card>
+</template>
