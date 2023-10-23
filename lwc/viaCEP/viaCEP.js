@@ -1,11 +1,31 @@
-import { LightningElement, track, api } from 'lwc';
+// LWC
+import { LightningElement, api, track } from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
+import { updateRecord } from 'lightning/uiRecordApi';
+// Apex
 import ConsultarCEP from "@salesforce/apex/ViaCEPController.chamarServico";
-import UpdateAdderss from "@salesforce/apex/ViaCEPController.updateAccountAddress";
+// Custom Labels
+import CEP from "@salesforce/label/c.CEP";
+import cidade from "@salesforce/label/c.Cidade";
+import endereco from "@salesforce/label/c.Endereco";
+import bairro from "@salesforce/label/c.Bairro";
+import estado from "@salesforce/label/c.Estado";
+import CEPIncompleto from "@salesforce/label/c.CEPIncompleto";
+import CEPNaoEncontrado from "@salesforce/label/c.CEPNaoEncontrado";
+import mensagemGenericaErro from "@salesforce/label/c.MensagemGenericaErro";
+import preenchaCampo from "@salesforce/label/c.PreenchaCampo";
+import erroInesperado from "@salesforce/label/c.ErroInesperado";
+import erro from "@salesforce/label/c.Erro";
+import atencao from "@salesforce/label/c.Atencao";
+import sucesso from "@salesforce/label/c.Sucesso";
+import enderecoAtualizadoSucesso from "@salesforce/label/c.EnderecoAtualizadoSucesso";
+import btnSalvar from "@salesforce/label/c.BtnSalvar";
 
 export default class ViaCEP extends LightningElement {
+
     @api recordId;
     @track loaded = true;
+    @track showMap = false;
     @track address = {
         cep: '',
         bairro: '',
@@ -13,6 +33,35 @@ export default class ViaCEP extends LightningElement {
         localidade: '',
         uf: '',
     };
+    label = {
+        CEP,
+        cidade,
+        endereco,
+        bairro,
+        estado,
+        CEPIncompleto,
+        CEPNaoEncontrado,
+        mensagemGenericaErro,
+        preenchaCampo,
+        erroInesperado,
+        erro,
+        atencao,
+        sucesso,
+        enderecoAtualizadoSucesso,
+        btnSalvar
+    }
+    @track mapMarkers = [
+        {
+            location: {
+                Street: '',
+                City: '',
+                Country: '',
+                PostalCode: '',
+                State: ''
+            },
+            icon: 'standard:account'
+        },
+    ];
 
     showToast(title, message, variant) {
         const event = new ShowToastEvent({
@@ -38,11 +87,16 @@ export default class ViaCEP extends LightningElement {
 
     handleBlurCEP() {
         if(this.address.cep.length < 8){
-            this.showToast('Atenção!', 'CEP incompleto para busca', 'info');
+            this.showToast(
+                this.label.atencao, 
+                this.label.CEPIncompleto, 
+                'info'
+            );
             return false;
         }
-        
+
         this.loaded = false;
+        this.showMap = false;
 
         ConsultarCEP({
             cep: this.address.cep
@@ -50,81 +104,85 @@ export default class ViaCEP extends LightningElement {
             
             if(!response.erro) {
                 this.address = Object.assign({}, response);
+
+                this.mapMarkers[0].location = {
+                    Street: this.address.logradouro,
+                    City: this.address.localidade,
+                    Country: 'BR',
+                    PostalCode: this.address.cep,
+                    State: this.address.uf
+                };
+                
+                this.showMap = true;
+                
             } else {
                 this.showToast(
-                    'Erro', 
-                    'CEP não encontrado, favor preencher manualmente', 
+                    this.label.erro, 
+                    this.label.CEPNaoEncontrado, 
                     'error'
                 );
             }
-            this.loaded = true;
         }).catch(error => {
             this.showToast(
-                'Erro inesperado!', 
-                'Tente novamente ou fale com um administrador', 
+                this.label.erroInesperado, 
+                this.label.mensagemGenericaErro, 
                 'error'
             );
+        }).finally(()=>{
             this.loaded = true;
         });
     }
 
     handleSave() {
-        if(!this.address.cep){
-            this.showToast('Erro', 'Preencha o campo CEP', 'error');
-            return false;
-        }
-        if(!this.address.logradouro){
-            this.showToast('Erro', 'Preencha o campo Endereço', 'error');
-            return false;
-        }
-        if(!this.address.bairro){
-            this.showToast('Erro', 'Preencha o campo Bairro', 'error');
-            return false;
-        }
-        if(!this.address.localidade){
-            this.showToast('Erro', 'Preencha o campo Cidade', 'error');
-            return false;
-        }
-        if(!this.address.uf){
-            this.showToast('Erro', 'Preencha o campo Estado', 'error');
-            return false;
-        }
 
-        this.loaded = false; 
+        const inputs = this.template.querySelectorAll("lightning-input");
+        var isValid = true;
 
-        var account = {
-            Id: this.recordId, 
-            ShippingPostalCode: this.address.cep, 
-            ShippingStreet: this.address.logradouro, 
-            ShippingCity: this.address.localidade, 
-            ShippingState: this.address.uf
-        }
+        inputs.forEach(input=> {
+            if (!input.validity.valid) {
+                isValid = false;
+                input.reportValidity();
+            }
+        });
 
-        UpdateAdderss({
-            accountJSON: JSON.stringify(account)
-        })
-        .then(response => {
-            if(response == 'success') {
-                this.showToast('Sucesso', 'Endereço atualizado com sucesso!', 'success');
-                eval("$A.get('e.force:refreshView').fire();");
-            } else {
+        if (isValid) {
+
+            this.loaded = false; 
+
+            const account = {
+                Id: this.recordId, 
+                ShippingPostalCode: this.address.cep, 
+                ShippingStreet: this.address.logradouro, 
+                ShippingCity: this.address.localidade, 
+                ShippingState: this.address.uf
+            }
+
+            updateRecord({ 
+                fields: account
+            })
+            .then(response => {
+
                 this.showToast(
-                    'Erro inesperado!', 
-                    'Tente novamente ou fale com um administrador', 
+                    this.label.sucesso, 
+                    this.label.enderecoAtualizadoSucesso, 
+                    'success'
+                );
+
+            })
+            .catch(error => {
+
+                console.log(error);
+
+                this.showToast(
+                    this.label.erroInesperado, 
+                    this.label.mensagemGenericaErro, 
                     'error'
                 );
-            }
-            
-            this.loaded = true;
-        })
-        .catch(error => {
-            console.log(error);
-            this.showToast(
-                'Erro inesperado!', 
-                'Tente novamente ou fale com um administrador', 
-                'error'
-            );
-            this.loaded = true;
-        });
+                
+            }).finally(()=> {
+                this.loaded = true;
+            });
+        }
     }
+
 }

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomLabels xmlns="http://soap.sforce.com/2006/04/metadata">
+    <labels>
+        <fullName>Atencao</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Atenção</shortDescription>
+        <value>Atenção</value>
+    </labels>
+    <labels>
+        <fullName>Bairro</fullName>
+        <categories>ViaCEP</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Bairro</shortDescription>
+        <value>Bairro</value>
+    </labels>
+    <labels>
+        <fullName>BtnSalvar</fullName>
+        <categories>ViaCEP</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Botão Salvar</shortDescription>
+        <value>Salvar</value>
+    </labels>
+    <labels>
+        <fullName>CEP</fullName>
+        <categories>ViaCEP</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>CEP</shortDescription>
+        <value>CEP</value>
+    </labels>
+    <labels>
+        <fullName>CEPIncompleto</fullName>
+        <categories>ViaCEP</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>CEP incompleto</shortDescription>
+        <value>CEP incompleto para busca.</value>
+    </labels>
+    <labels>
+        <fullName>CEPNaoEncontrado</fullName>
+        <categories>ViaCEP</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>CEP não encontrado</shortDescription>
+        <value>CEP não encontrado, favor preencher manualmente.</value>
+    </labels>
+    <labels>
+        <fullName>Cidade</fullName>
+        <categories>ViaCEP</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Cidade</shortDescription>
+        <value>Cidade</value>
+    </labels>
+    <labels>
+        <fullName>Endereco</fullName>
+        <categories>ViaCEP</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Endereço</shortDescription>
+        <value>Endereço</value>
+    </labels>
+    <labels>
+        <fullName>EnderecoAtualizadoSucesso</fullName>
+        <categories>ViaCEP</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Endereço atualizado com sucesso</shortDescription>
+        <value>Endereço atualizado com sucesso.</value>
+    </labels>
+    <labels>
+        <fullName>Erro</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Erro</shortDescription>
+        <value>Erro</value>
+    </labels>
+    <labels>
+        <fullName>ErroInesperado</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Erro Inesperado</shortDescription>
+        <value>Erro Inesperado</value>
+    </labels>
+    <labels>
+        <fullName>Estado</fullName>
+        <categories>ViaCEP</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Estado</shortDescription>
+        <value>Estado</value>
+    </labels>
+    <labels>
+        <fullName>MensagemGenericaErro</fullName>
+        <categories>ViaCEP</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Mensagem genérica de erro</shortDescription>
+        <value>Tente novamente ou fale com um administrador.</value>
+    </labels>
+    <labels>
+        <fullName>PreenchaCampo</fullName>
+        <categories>ViaCEP</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Preencha o campo</shortDescription>
+        <value>Preencha o campo {FieldName}.</value>
+    </labels>
+    <labels>
+        <fullName>Sucesso</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Sucesso</shortDescription>
+        <value>Sucesso</value>
+    </labels>
+</CustomLabels>

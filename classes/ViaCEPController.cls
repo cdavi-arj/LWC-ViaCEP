@@ -1,27 +1,11 @@
-public without sharing class ViaCEPController {
+public with sharing class ViaCEPController {
 
     @AuraEnabled(cacheable=true)
     public static ViaCep chamarServico(String cep) {
-        return consultarCEP(cep);
+        return getAddressByCEP(cep);
     }
 
-    @AuraEnabled
-    public static String updateAccountAddress(String accountJSON) {
-        String result;
-        try {
-            Account acct = (Account) JSON.deserialize(accountJSON, Account.class);
-            update acct;
-
-            result = 'success';
-        } catch (Exception ex) {
-            System.debug('Error: ' + ex.getMessage());
-            result = 'error';
-        }
-
-        return result;
-    }
-
-    public static ViaCep consultarCEP(String cep) {
+    public static ViaCep getAddressByCEP(String cep) {
         Viacep result = new Viacep();
         HttpRequest request = new HttpRequest();
         // Não esquecer de cadastrar o viacep como site remoto
